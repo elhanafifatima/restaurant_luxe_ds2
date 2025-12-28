@@ -18,6 +18,13 @@ class MenuController extends Controller
         ]);
     }
 
+    public function adminIndex()
+    {
+        return Inertia::render('Admin/Menu/Index', [
+            'menuItems' => MenuItem::all()
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -32,9 +39,9 @@ class MenuController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\'-]+$/',
             'description' => 'nullable|string',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0.01',
             'category' => 'required|string',
             'image_path' => 'nullable|string',
             'ingredients' => 'nullable|string',
@@ -61,9 +68,9 @@ class MenuController extends Controller
     public function update(Request $request, MenuItem $menuItem)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\'-]+$/',
             'description' => 'nullable|string',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0.01',
             'category' => 'required|string',
             'image_path' => 'nullable|string',
         ]);

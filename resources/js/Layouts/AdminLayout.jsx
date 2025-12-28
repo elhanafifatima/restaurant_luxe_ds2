@@ -9,7 +9,7 @@ export default function AdminLayout({ children }) {
         { name: 'Tableau de bord', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6', route: 'dashboard', active: route().current('dashboard'), adminOnly: true },
 
         // Admin Only
-        { name: 'Menu', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01', route: 'admin.menu.create', active: route().current('admin.menu.*'), adminOnly: true },
+        { name: 'Gestion du Menu', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01', route: 'admin.menu.index', active: route().current('admin.menu.*'), adminOnly: true },
         { name: 'Toutes les Réservations', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', route: 'admin.reservations.index', active: route().current('admin.reservations.*'), adminOnly: true },
 
         // Client Only
@@ -84,7 +84,9 @@ export default function AdminLayout({ children }) {
                     <div className="flex items-center gap-4">
                         <div className="text-right hidden sm:block">
                             <div className="text-sm font-medium text-white">{user.name}</div>
-                            <div className="text-[10px] uppercase tracking-widest text-[#D4AF37] font-bold">{user.role === 'admin' ? 'Administrateur' : 'Client Privilégié'}</div>
+                            <div className="text-[10px] uppercase tracking-widest text-[#D4AF37] font-bold">
+                                {user.role === 'admin' ? 'Administrateur' : user.role === 'personnel' ? 'Personnel' : 'Client Privilégié'}
+                            </div>
                         </div>
                         <div className="w-10 h-10 rounded-full bg-[#D4AF37] flex items-center justify-center text-black font-bold border border-[#D4AF37]/50 shadow-lg shadow-[#D4AF37]/10">
                             {user.name.charAt(0).toUpperCase()}

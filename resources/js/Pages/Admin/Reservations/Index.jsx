@@ -68,15 +68,26 @@ export default function Index({ reservations }) {
                                             {reservation.guests_count} pers.
                                         </td>
                                         <td className="px-8 py-5">
-                                            <select
-                                                value={reservation.status}
-                                                onChange={(e) => handleStatusUpdate(reservation.id, e.target.value)}
-                                                className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border ${getStatusStyle(reservation.status)} bg-transparent cursor-pointer outline-none focus:ring-1 focus:ring-[#D4AF37] transition-all`}
-                                            >
-                                                <option value="pending" className="bg-[#192A51]">En attente</option>
-                                                <option value="confirmed" className="bg-[#192A51]">Confirmé</option>
-                                                <option value="cancelled" className="bg-[#192A51]">Annulé</option>
-                                            </select>
+                                            {reservation.status === 'pending' ? (
+                                                <div className="flex items-center gap-2">
+                                                    <button
+                                                        onClick={() => handleStatusUpdate(reservation.id, 'confirmed')}
+                                                        className="text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white transition-all"
+                                                    >
+                                                        Valider
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleStatusUpdate(reservation.id, 'cancelled')}
+                                                        className="text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border border-rose-500/20 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white transition-all"
+                                                    >
+                                                        Refuser
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <span className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border ${getStatusStyle(reservation.status)}`}>
+                                                    {reservation.status === 'confirmed' ? 'Confirmé' : 'Annulé'}
+                                                </span>
+                                            )}
                                         </td>
                                         <td className="px-8 py-5 text-right">
                                             <button

@@ -1,7 +1,7 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Head, Link, usePage } from '@inertiajs/react';
 
-export default function Dashboard({ stats }) {
+export default function Dashboard({ stats = { menuCount: 0, reservationCount: 0, userCount: 0, recentReservations: [] } }) {
     const { auth } = usePage().props;
     const isAdmin = auth.user.role === 'admin';
 
@@ -71,11 +71,11 @@ export default function Dashboard({ stats }) {
                                 <div key={res.id} className="flex justify-between items-center bg-[#192A51]/50 p-4 rounded-xl border border-white/5">
                                     <div>
                                         <div className="text-sm font-medium text-white">{res.name}</div>
-                                        <div className="text-xs text-gray-400">{new Date(res.reservation_date).toLocaleDateString()} à {new Date(res.reservation_date).toLocaleTimeString([], { hour: '2h', minute: '2h' })}</div>
+                                        <div className="text-xs text-gray-400">{new Date(res.reservation_date).toLocaleDateString()} à {new Date(res.reservation_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                                     </div>
                                     <span className={`text-[10px] uppercase font-bold px-3 py-1 rounded-full ${res.status === 'confirmed' ? 'bg-green-500/10 text-green-400' :
-                                            res.status === 'cancelled' ? 'bg-red-500/10 text-red-400' :
-                                                'bg-[#D4AF37]/10 text-[#D4AF37]'
+                                        res.status === 'cancelled' ? 'bg-red-500/10 text-red-400' :
+                                            'bg-[#D4AF37]/10 text-[#D4AF37]'
                                         }`}>
                                         {res.status}
                                     </span>

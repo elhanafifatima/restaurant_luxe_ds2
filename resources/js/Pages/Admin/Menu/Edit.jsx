@@ -2,7 +2,7 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { Head, useForm, Link } from '@inertiajs/react';
 
 export default function Edit({ menuItem }) {
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, put, processing, errors, setError, clearErrors } = useForm({
         name: menuItem.name || '',
         description: menuItem.description || '',
         price: menuItem.price || '',
@@ -10,6 +10,26 @@ export default function Edit({ menuItem }) {
         image_path: menuItem.image_path || '',
         ingredients: menuItem.ingredients || '',
     });
+
+    const handleNameChange = (e) => {
+        const value = e.target.value;
+        setData('name', value);
+        if (value && !/^[a-zA-ZÀ-ÿ\s'-]+$/.test(value)) {
+            setError('name', 'Le nom du plat ne doit contenir que des lettres.');
+        } else {
+            clearErrors('name');
+        }
+    };
+
+    const handlePriceChange = (e) => {
+        const value = e.target.value;
+        setData('price', value);
+        if (value && parseFloat(value) <= 0) {
+            setError('price', 'Le prix doit être supérieur à 0.');
+        } else {
+            clearErrors('price');
+        }
+    };
 
     const submit = (e) => {
         e.preventDefault();
@@ -36,7 +56,7 @@ export default function Edit({ menuItem }) {
                                 <input
                                     type="text"
                                     value={data.name}
-                                    onChange={e => setData('name', e.target.value)}
+                                    onChange={handleNameChange}
                                     className="w-full bg-[#1e315f]/50 border border-white/10 text-white rounded-xl px-4 py-4 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all duration-300 outline-none font-sans"
                                     required
                                 />
@@ -71,7 +91,7 @@ export default function Edit({ menuItem }) {
                                         type="number"
                                         step="0.01"
                                         value={data.price}
-                                        onChange={e => setData('price', e.target.value)}
+                                        onChange={handlePriceChange}
                                         className="w-full bg-[#1e315f]/50 border border-white/10 text-white rounded-xl px-4 py-4 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all duration-300 outline-none font-sans"
                                         required
                                     />

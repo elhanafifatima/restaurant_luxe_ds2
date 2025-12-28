@@ -62,6 +62,7 @@ Route::get('/dashboard', function () {
 
         // Admin Menu Management
         Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/menu', [MenuController::class, 'adminIndex'])->name('menu.index');
         Route::get('/menu/create', [MenuController::class, 'create'])->name('menu.create');
         Route::post('/menu', [MenuController::class, 'store'])->name('menu.store');
         Route::get('/menu/{menuItem}/edit', [MenuController::class, 'edit'])->name('menu.edit');
