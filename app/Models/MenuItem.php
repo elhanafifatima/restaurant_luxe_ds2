@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class MenuItem extends Model
 {
-    protected $fillable = ['name', 'description', 'price', 'image_path', 'category'];
+    protected $fillable = ['name', 'description', 'price', 'image_path', 'category', 'ingredients'];
 }

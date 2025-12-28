@@ -1,4 +1,4 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AdminLayout from '@/Layouts/AdminLayout';
 import { Head, router } from '@inertiajs/react';
 
 export default function Index({ reservations }) {
@@ -7,110 +7,96 @@ export default function Index({ reservations }) {
     };
 
     const handleDelete = (id) => {
-        if (confirm('Are you sure you want to delete this reservation?')) {
+        if (confirm('Voulez-vous vraiment supprimer cette réservation ?')) {
             router.delete(route('admin.reservations.destroy', id));
         }
     };
 
-    const getStatusColor = (status) => {
+    const getStatusStyle = (status) => {
         switch (status) {
             case 'confirmed':
-                return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+                return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
             case 'cancelled':
-                return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+                return 'bg-rose-500/10 text-rose-400 border-rose-500/20';
             default:
-                return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+                return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
         }
     };
 
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                    Reservations Management
-                </h2>
-            }
-        >
-            <Head title="Reservations Management" />
+        <AdminLayout>
+            <Head title="Gestion des Réservations - Admin" />
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                        <div className="p-6 text-gray-900 dark:text-gray-100">
-                            {reservations.length > 0 ? (
-                                <div className="overflow-x-auto">
-                                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                        <thead className="bg-gray-50 dark:bg-gray-900">
-                                            <tr>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                                    Guest
-                                                </th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                                    Contact
-                                                </th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                                    Date & Time
-                                                </th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                                    Guests
-                                                </th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                                    Status
-                                                </th>
-                                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                                    Actions
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                                            {reservations.map((reservation) => (
-                                                <tr key={reservation.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="text-sm font-medium">{reservation.name}</div>
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <div className="text-sm text-gray-500 dark:text-gray-400">{reservation.email}</div>
-                                                        <div className="text-sm text-gray-500 dark:text-gray-400">{reservation.phone}</div>
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                                        {new Date(reservation.reservation_date).toLocaleString()}
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                                        {reservation.guests_count}
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <select
-                                                            value={reservation.status}
-                                                            onChange={(e) => handleStatusUpdate(reservation.id, e.target.value)}
-                                                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(reservation.status)} border-0 cursor-pointer`}
-                                                        >
-                                                            <option value="pending">Pending</option>
-                                                            <option value="confirmed">Confirmed</option>
-                                                            <option value="cancelled">Cancelled</option>
-                                                        </select>
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                        <button
-                                                            onClick={() => handleDelete(reservation.id)}
-                                                            className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                                                        >
-                                                            Delete
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            ) : (
-                                <div className="text-center py-12 text-gray-500">
-                                    No reservations found.
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
+            <div className="mb-10">
+                <h2 className="text-3xl font-light text-white mb-2 font-serif uppercase tracking-widest">Réservations</h2>
+                <p className="text-gray-400 font-sans italic">Gérez vos convives et l'occupation de votre salle.</p>
             </div>
-        </AuthenticatedLayout>
+
+            <div className="bg-[#1e315f]/50 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-sm shadow-xl">
+                {reservations.length > 0 ? (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-white/5">
+                            <thead className="bg-white/5">
+                                <tr>
+                                    <th className="px-8 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Convive</th>
+                                    <th className="px-8 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Contact</th>
+                                    <th className="px-8 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Date & Heure</th>
+                                    <th className="px-8 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Couverts</th>
+                                    <th className="px-8 py-4 text-left text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Statut</th>
+                                    <th className="px-8 py-4 text-right text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-white/5">
+                                {reservations.map((reservation) => (
+                                    <tr key={reservation.id} className="hover:bg-white/5 transition-colors group">
+                                        <td className="px-8 py-5">
+                                            <div className="text-sm font-bold text-white group-hover:text-[#D4AF37] transition-colors">{reservation.name}</div>
+                                        </td>
+                                        <td className="px-8 py-5">
+                                            <div className="text-xs text-gray-400 font-sans">{reservation.email}</div>
+                                            <div className="text-[10px] text-gray-500 font-sans mt-0.5">{reservation.phone}</div>
+                                        </td>
+                                        <td className="px-8 py-5 text-sm font-sans font-bold text-gray-300">
+                                            {new Date(reservation.reservation_date).toLocaleDateString('fr-FR', {
+                                                day: 'numeric',
+                                                month: 'short',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })}
+                                        </td>
+                                        <td className="px-8 py-5 text-sm font-sans font-bold text-[#D4AF37]">
+                                            {reservation.guests_count} pers.
+                                        </td>
+                                        <td className="px-8 py-5">
+                                            <select
+                                                value={reservation.status}
+                                                onChange={(e) => handleStatusUpdate(reservation.id, e.target.value)}
+                                                className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border ${getStatusStyle(reservation.status)} bg-transparent cursor-pointer outline-none focus:ring-1 focus:ring-[#D4AF37] transition-all`}
+                                            >
+                                                <option value="pending" className="bg-[#192A51]">En attente</option>
+                                                <option value="confirmed" className="bg-[#192A51]">Confirmé</option>
+                                                <option value="cancelled" className="bg-[#192A51]">Annulé</option>
+                                            </select>
+                                        </td>
+                                        <td className="px-8 py-5 text-right">
+                                            <button
+                                                onClick={() => handleDelete(reservation.id)}
+                                                className="text-[10px] font-bold text-gray-500 hover:text-rose-400 uppercase tracking-widest transition-colors"
+                                            >
+                                                Supprimer
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : (
+                    <div className="text-center py-20">
+                        <p className="text-gray-500 italic font-sans">Aucune réservation enregistrée.</p>
+                    </div>
+                )}
+            </div>
+        </AdminLayout>
     );
 }

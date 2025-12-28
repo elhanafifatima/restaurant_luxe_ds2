@@ -2,17 +2,32 @@ import RestaurantLayout from '@/Layouts/RestaurantLayout';
 import { Head, useForm } from '@inertiajs/react';
 
 export default function Contact() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset, setError, clearErrors } = useForm({
         name: '',
         email: '',
         message: '',
     });
 
+    const handleNameChange = (e) => {
+        const value = e.target.value;
+        setData('name', value);
+        if (value && !/^[a-zA-ZÀ-ÿ\s'-]+$/.test(value)) {
+            setError('name', 'Le nom ne doit contenir que des lettres.');
+        } else {
+            clearErrors('name');
+        }
+    };
+
     const submit = (e) => {
         e.preventDefault();
+
+        if (!/^[a-zA-ZÀ-ÿ\s'-]+$/.test(data.name)) {
+            setError('name', 'Nom invalide (lettres uniquement).');
+            return;
+        }
+
         // Since we don't have a backend route for contact, we'll just simulate success
-        // post(route('contact.store')); 
-        alert('Thank you for contacting us! We will get back to you shortly.');
+        alert('Merci de nous avoir contactés ! Nous vous répondrons sous peu.');
         reset();
     };
 
@@ -65,10 +80,11 @@ export default function Contact() {
                                 <input
                                     type="text"
                                     value={data.name}
-                                    onChange={e => setData('name', e.target.value)}
+                                    onChange={handleNameChange}
                                     className="w-full bg-gray-900 border border-gray-700 rounded p-3 text-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none"
                                     required
                                 />
+                                {errors.name && <div className="text-rose-400 text-xs mt-2 italic">{errors.name}</div>}
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-400 mb-1">Email Address</label>

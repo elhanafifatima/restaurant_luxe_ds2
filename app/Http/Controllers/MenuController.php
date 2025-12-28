@@ -37,6 +37,7 @@ class MenuController extends Controller
             'price' => 'required|numeric',
             'category' => 'required|string',
             'image_path' => 'nullable|string',
+            'ingredients' => 'nullable|string',
         ]);
 
         MenuItem::create($validated);

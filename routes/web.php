@@ -25,17 +25,43 @@ Route::post('/reservation', [ReservationController::class, 'store'])->name('rese
 
 // Dashboard
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $user = auth()->user();
+    
+    if ($user->role !== 'admin') {
+        return redirect()->route('reservations.mine');
+    }
+
+    $stats = [
+        'menuCount' => \App\Models\MenuItem::count(),
+        'reservationCount' => \App\Models\Reservation::count(),
+        'userCount' => \App\Models\User::count(),
+        'recentReservations' => \App\Models\Reservation::orderBy('created_at', 'desc')->take(5)->get(),
+    ];
+
+    return Inertia::render('Dashboard', [
+        'stats' => $stats
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Admin / Auth Routes
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Admin / Auth Routes
+    Route::middleware('auth')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Admin Menu Management
-    Route::prefix('admin')->name('admin.')->group(function () {
+        // My Reservations (Client)
+        Route::get('/my-reservations', [ReservationController::class, 'myReservations'])->name('reservations.mine');
+
+        // Development Helper: Promote to Admin
+        Route::get('/promote-me', function (Request $request) {
+            $user = $request->user();
+            $user->role = 'admin';
+            $user->save();
+            return redirect()->route('dashboard')->with('status', 'Vous êtes maintenant administrateur.');
+        });
+
+        // Admin Menu Management
+        Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/menu/create', [MenuController::class, 'create'])->name('menu.create');
         Route::post('/menu', [MenuController::class, 'store'])->name('menu.store');
         Route::get('/menu/{menuItem}/edit', [MenuController::class, 'edit'])->name('menu.edit');
