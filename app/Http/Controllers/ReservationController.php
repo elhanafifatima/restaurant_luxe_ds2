@@ -46,7 +46,7 @@ class ReservationController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\'-]+$/',
             'email' => 'required|email',
-            'phone' => 'required|string|regex:/^[\d\s+]+$/',
+            'phone' => 'required|string|min:10|max:13|regex:/^[\d\s+]+$/',
             'reservation_date' => 'required|date',
             'guests_count' => 'required|integer|min:1',
             'special_requests' => 'nullable|string',

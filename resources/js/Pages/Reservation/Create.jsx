@@ -31,6 +31,8 @@ export default function Create({ auth }) {
         setData('phone', value);
         if (value && !/^[\d\s+]+$/.test(value)) {
             setError('phone', 'Le numéro de téléphone ne doit contenir que des chiffres.');
+        } else if (value && (value.replace(/\s/g, '').length < 10 || value.replace(/\s/g, '').length > 13)) {
+            setError('phone', 'Le numéro de téléphone doit contenir entre 10 et 13 chiffres.');
         } else {
             clearErrors('phone');
         }
@@ -45,8 +47,14 @@ export default function Create({ auth }) {
             return;
         }
 
+        const strippedPhone = data.phone.replace(/\s/g, '');
         if (!/^[\d\s+]+$/.test(data.phone)) {
             setError('phone', 'Téléphone invalide (chiffres uniquement).');
+            return;
+        }
+
+        if (strippedPhone.length < 10 || strippedPhone.length > 13) {
+            setError('phone', 'Le téléphone doit contenir entre 10 et 13 chiffres.');
             return;
         }
 

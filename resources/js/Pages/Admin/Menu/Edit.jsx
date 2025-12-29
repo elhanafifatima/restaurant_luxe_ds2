@@ -2,13 +2,14 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { Head, useForm, Link } from '@inertiajs/react';
 
 export default function Edit({ menuItem }) {
-    const { data, setData, put, processing, errors, setError, clearErrors } = useForm({
+    const { data, setData, post, processing, errors, setError, clearErrors } = useForm({
         name: menuItem.name || '',
         description: menuItem.description || '',
         price: menuItem.price || '',
         category: menuItem.category || 'main',
         image_path: menuItem.image_path || '',
         ingredients: menuItem.ingredients || '',
+        _method: 'PUT',
     });
 
     const handleNameChange = (e) => {
@@ -33,7 +34,7 @@ export default function Edit({ menuItem }) {
 
     const submit = (e) => {
         e.preventDefault();
-        put(route('admin.menu.update', menuItem.id));
+        post(route('admin.menu.update', menuItem.id));
     };
 
     return (
@@ -112,6 +113,41 @@ export default function Edit({ menuItem }) {
                                     </select>
                                     {errors.category && <div className="text-red-400 text-xs mt-2 italic">{errors.category}</div>}
                                 </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 font-sans font-bold">Image du plat</label>
+                                <div className="mt-2 flex items-center gap-6">
+                                    <div className="w-24 h-24 rounded-xl border-2 border-dashed border-white/10 flex items-center justify-center overflow-hidden bg-white/5">
+                                        {data.image_path ? (
+                                            <img
+                                                src={typeof data.image_path === 'string' ? data.image_path : URL.createObjectURL(data.image_path)}
+                                                className="w-full h-full object-cover"
+                                                alt="Preview"
+                                            />
+                                        ) : (
+                                            <svg className="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                        )}
+                                    </div>
+                                    <div className="flex-1">
+                                        <input
+                                            type="file"
+                                            onChange={e => setData('image_path', e.target.files[0])}
+                                            className="block w-full text-sm text-gray-400
+                                                 file:mr-4 file:py-2 file:px-4
+                                                 file:rounded-full file:border-0
+                                                 file:text-xs file:font-bold
+                                                 file:bg-[#D4AF37] file:text-black
+                                                 hover:file:bg-white transition-all
+                                                 cursor-pointer"
+                                            accept="image/*"
+                                        />
+                                        <p className="text-[10px] text-gray-500 mt-2 italic uppercase tracking-wider">Laissez vide pour conserver l'image actuelle.</p>
+                                    </div>
+                                </div>
+                                {errors.image_path && <div className="text-red-400 text-xs mt-2 italic">{errors.image_path}</div>}
                             </div>
                         </div>
 

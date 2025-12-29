@@ -43,13 +43,18 @@ class MenuController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0.01',
             'category' => 'required|string',
-            'image_path' => 'nullable|string',
+            'image_path' => 'nullable|image|max:2048',
             'ingredients' => 'nullable|string',
         ]);
 
+        if ($request->hasFile('image_path')) {
+            $path = $request->file('image_path')->store('menu_items', 'public');
+            $validated['image_path'] = '/storage/' . $path;
+        }
+
         MenuItem::create($validated);
 
-        return redirect()->route('menu.index');
+        return redirect()->route('admin.menu.index');
     }
 
     /**
@@ -67,17 +72,36 @@ class MenuController extends Controller
      */
     public function update(Request $request, MenuItem $menuItem)
     {
-        $validated = $request->validate([
+        $rules = [
             'name' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\'-]+$/',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0.01',
             'category' => 'required|string',
-            'image_path' => 'nullable|string',
-        ]);
+            'ingredients' => 'nullable|string',
+        ];
+
+        // If it's a file upload, validate as image
+        if ($request->hasFile('image_path')) {
+            $rules['image_path'] = 'nullable|image|max:2048';
+        } else {
+            $rules['image_path'] = 'nullable|string';
+        }
+
+        $validated = $request->validate($rules);
+
+        if ($request->hasFile('image_path')) {
+            // Delete old image if it exists and is a local file
+            if ($menuItem->image_path && str_starts_with($menuItem->image_path, '/storage/')) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete(str_replace('/storage/', '', $menuItem->image_path));
+            }
+            
+            $path = $request->file('image_path')->store('menu_items', 'public');
+            $validated['image_path'] = '/storage/' . $path;
+        }
 
         $menuItem->update($validated);
 
-        return redirect()->route('menu.index');
+        return redirect()->route('admin.menu.index');
     }
 
     /**
