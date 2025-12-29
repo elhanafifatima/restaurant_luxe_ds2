@@ -19,6 +19,18 @@ class ReservationController extends Controller
     }
 
     /**
+     * Display reservations for the logged-in user.
+     */
+    public function myReservations()
+    {
+        return Inertia::render('Client/Reservations/Index', [
+            'reservations' => Reservation::where('user_id', auth()->id())
+                ->orderBy('reservation_date', 'desc')
+                ->get()
+        ]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
@@ -32,9 +44,9 @@ class ReservationController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\'-]+$/',
             'email' => 'required|email',
-            'phone' => 'required|string',
+            'phone' => 'required|string|regex:/^[\d\s+]+$/',
             'reservation_date' => 'required|date',
             'guests_count' => 'required|integer|min:1',
             'special_requests' => 'nullable|string',

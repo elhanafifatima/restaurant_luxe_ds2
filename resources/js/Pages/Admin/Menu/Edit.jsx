@@ -1,4 +1,4 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AdminLayout from '@/Layouts/AdminLayout';
 import { Head, useForm, Link } from '@inertiajs/react';
 
 export default function Edit({ menuItem }) {
@@ -8,6 +8,7 @@ export default function Edit({ menuItem }) {
         price: menuItem.price || '',
         category: menuItem.category || 'main',
         image_path: menuItem.image_path || '',
+        ingredients: menuItem.ingredients || '',
     });
 
     const submit = (e) => {
@@ -16,104 +17,102 @@ export default function Edit({ menuItem }) {
     };
 
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                    Edit Menu Item
-                </h2>
-            }
-        >
-            <Head title="Edit Menu Item" />
+        <AdminLayout>
+            <Head title="Modifier l'article - Admin" />
 
-            <div className="py-12">
-                <div className="mx-auto max-w-3xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                        <div className="p-6 text-gray-900 dark:text-gray-100">
-                            <form onSubmit={submit} className="space-y-6">
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Name</label>
-                                    <input
-                                        type="text"
-                                        value={data.name}
-                                        onChange={e => setData('name', e.target.value)}
-                                        className="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-amber-500 dark:focus:border-amber-600 focus:ring-amber-500 dark:focus:ring-amber-600 rounded-md shadow-sm"
-                                        required
-                                    />
-                                    {errors.name && <div className="text-red-500 text-sm mt-1">{errors.name}</div>}
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Description</label>
-                                    <textarea
-                                        value={data.description}
-                                        onChange={e => setData('description', e.target.value)}
-                                        className="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-amber-500 dark:focus:border-amber-600 focus:ring-amber-500 dark:focus:ring-amber-600 rounded-md shadow-sm h-24"
-                                    ></textarea>
-                                    {errors.description && <div className="text-red-500 text-sm mt-1">{errors.description}</div>}
-                                </div>
-
-                                <div className="grid md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-sm font-medium mb-1">Price</label>
-                                        <input
-                                            type="number"
-                                            step="0.01"
-                                            value={data.price}
-                                            onChange={e => setData('price', e.target.value)}
-                                            className="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-amber-500 dark:focus:border-amber-600 focus:ring-amber-500 dark:focus:ring-amber-600 rounded-md shadow-sm"
-                                            required
-                                        />
-                                        {errors.price && <div className="text-red-500 text-sm mt-1">{errors.price}</div>}
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium mb-1">Category</label>
-                                        <select
-                                            value={data.category}
-                                            onChange={e => setData('category', e.target.value)}
-                                            className="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-amber-500 dark:focus:border-amber-600 focus:ring-amber-500 dark:focus:ring-amber-600 rounded-md shadow-sm"
-                                        >
-                                            <option value="starter">Starter</option>
-                                            <option value="main">Main</option>
-                                            <option value="dessert">Dessert</option>
-                                            <option value="drink">Drink</option>
-                                        </select>
-                                        {errors.category && <div className="text-red-500 text-sm mt-1">{errors.category}</div>}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Image Path (optional)</label>
-                                    <input
-                                        type="text"
-                                        value={data.image_path}
-                                        onChange={e => setData('image_path', e.target.value)}
-                                        className="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-amber-500 dark:focus:border-amber-600 focus:ring-amber-500 dark:focus:ring-amber-600 rounded-md shadow-sm"
-                                        placeholder="e.g., menu/dish.jpg"
-                                    />
-                                    {errors.image_path && <div className="text-red-500 text-sm mt-1">{errors.image_path}</div>}
-                                </div>
-
-                                <div className="flex items-center justify-end gap-4">
-                                    <Link
-                                        href={route('menu.index')}
-                                        className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-                                    >
-                                        Cancel
-                                    </Link>
-                                    <button
-                                        type="submit"
-                                        disabled={processing}
-                                        className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700 transition disabled:opacity-50"
-                                    >
-                                        Update Item
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+            <div className="flex justify-between items-center mb-10">
+                <div>
+                    <h2 className="text-3xl font-light text-white mb-2 font-serif uppercase tracking-widest">Modifier l'Article</h2>
+                    <p className="text-gray-400 font-sans italic">Ajustez les détails de votre création culinaire.</p>
                 </div>
             </div>
-        </AuthenticatedLayout>
+
+            <div className="max-w-3xl">
+                <div className="bg-[#1e315f]/50 border border-white/5 rounded-2xl p-8 backdrop-blur-sm shadow-xl">
+                    <form onSubmit={submit} className="space-y-8">
+                        <div className="space-y-6">
+                            <div>
+                                <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 font-sans font-bold">Nom du plat</label>
+                                <input
+                                    type="text"
+                                    value={data.name}
+                                    onChange={e => setData('name', e.target.value)}
+                                    className="w-full bg-[#1e315f]/50 border border-white/10 text-white rounded-xl px-4 py-4 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all duration-300 outline-none font-sans"
+                                    required
+                                />
+                                {errors.name && <div className="text-red-400 text-xs mt-2 italic">{errors.name}</div>}
+                            </div>
+
+                            <div>
+                                <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 font-sans font-bold">Description</label>
+                                <textarea
+                                    value={data.description}
+                                    onChange={e => setData('description', e.target.value)}
+                                    className="w-full bg-[#1e315f]/50 border border-white/10 text-white rounded-xl px-4 py-4 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all duration-300 outline-none font-sans h-32 resize-none"
+                                ></textarea>
+                                {errors.description && <div className="text-red-400 text-xs mt-2 italic">{errors.description}</div>}
+                            </div>
+
+                            <div>
+                                <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 font-sans font-bold">Ingrédients</label>
+                                <textarea
+                                    value={data.ingredients}
+                                    onChange={e => setData('ingredients', e.target.value)}
+                                    className="w-full bg-[#1e315f]/50 border border-white/10 text-white rounded-xl px-4 py-4 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all duration-300 outline-none font-sans h-32 resize-none"
+                                    placeholder="Liste des ingrédients..."
+                                ></textarea>
+                                {errors.ingredients && <div className="text-red-400 text-xs mt-2 italic">{errors.ingredients}</div>}
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <div>
+                                    <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 font-sans font-bold">Prix (€)</label>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        value={data.price}
+                                        onChange={e => setData('price', e.target.value)}
+                                        className="w-full bg-[#1e315f]/50 border border-white/10 text-white rounded-xl px-4 py-4 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all duration-300 outline-none font-sans"
+                                        required
+                                    />
+                                    {errors.price && <div className="text-red-400 text-xs mt-2 italic">{errors.price}</div>}
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 font-sans font-bold">Catégorie</label>
+                                    <select
+                                        value={data.category}
+                                        onChange={e => setData('category', e.target.value)}
+                                        className="w-full bg-[#1e315f]/50 border border-white/10 text-white rounded-xl px-4 py-4 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all duration-300 outline-none font-sans appearance-none cursor-pointer"
+                                    >
+                                        <option value="starter" className="bg-[#192A51]">Entrée</option>
+                                        <option value="main" className="bg-[#192A51]">Plat Principal</option>
+                                        <option value="dessert" className="bg-[#192A51]">Dessert</option>
+                                        <option value="drink" className="bg-[#192A51]">Boisson</option>
+                                    </select>
+                                    {errors.category && <div className="text-red-400 text-xs mt-2 italic">{errors.category}</div>}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-end gap-6 pt-6 border-t border-white/5">
+                            <Link
+                                href={route('dashboard')}
+                                className="text-xs uppercase tracking-widest text-gray-500 hover:text-white transition-colors font-bold"
+                            >
+                                Annuler
+                            </Link>
+                            <button
+                                type="submit"
+                                disabled={processing}
+                                className="px-8 py-4 bg-[#D4AF37] text-black rounded-xl font-bold text-xs hover:bg-white transition-all transform hover:scale-105 shadow-lg shadow-[#D4AF37]/20 uppercase tracking-widest disabled:opacity-50"
+                            >
+                                Mettre à Jour
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </AdminLayout>
     );
 }
